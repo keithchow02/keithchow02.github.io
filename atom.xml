@@ -6,7 +6,7 @@
   <link href="https://keithchow02.github.io/atom.xml" rel="self"/>
   
   <link href="https://keithchow02.github.io/"/>
-  <updated>2023-12-23T10:16:50.337Z</updated>
+  <updated>2024-01-01T12:58:28.033Z</updated>
   <id>https://keithchow02.github.io/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL5.6.40升级8.0.26</title>
+    <link href="https://keithchow02.github.io/post/7f8b6d28.html"/>
+    <id>https://keithchow02.github.io/post/7f8b6d28.html</id>
+    <published>2024-01-01T12:55:10.000Z</published>
+    <updated>2024-01-01T12:58:28.033Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="MySQL5-6-40升级8-0-26"><a href="#MySQL5-6-40升级8-0-26" class="headerlink" title="MySQL5.6.40升级8.0.26"></a>MySQL5.6.40升级8.0.26</h1><h2 id="前言-为什么要升级MySQL版本"><a href="#前言-为什么要升级MySQL版本" class="headerlink" title="前言:为什么要升级MySQL版本?"></a>前言:为什么要升级MySQL版本?</h2><p>MySQL5.6第一次发布时间是2013-2-5,他确实是一个非常经典的版本,但将近11岁的高龄让他面对如今的问题只能进行简单元素的增删改查了.为什么我会想到去跨大版本的升级MySQL呢?当我学习黑马程序员的MybatisPlus课程时发现导入数据库总是出错,发现他的数据库还包含着json数据,而这是MySQL5.7开始的功能,经查询发现MySQL5.6已经在2021年2月停止官方支持,就连注重稳定的银行也已经升级数据库到8.0版本了(大多数版本选择都是从8.0.18开始，比如某五大行中两家机构选择8.0.18入坑,某些股份制银行则是选择8.0.18、8.0.20和8.0.21),本着一步到位的原则,我选择了MySQL8.0.26作为升级对象.</p><h2 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a>环境介绍</h2><p>这是我目前的版本5.6.40</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224151156598.png" alt="image-20231224151156598"></p><h2 id="卸载MySQL"><a href="#卸载MySQL" class="headerlink" title="卸载MySQL"></a>卸载MySQL</h2><p>卸载当前5.6的MySQL软件我选择了使用”IObit Uninstaller”这款软件来实现一键卸载.官网链接是<a href="https://www.iobit.com/en/update/uninstaller/">IObit Uninstaller, Best Uninstall Tool for Your PC - IObit</a></p><p>选择FREE DOWNLOAD,</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155226275.png" alt="image-20231224155226275"></p><p>搜索框输入mysql将14个名称带有mysql的软件勾选上选择卸载</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224164009880.png" alt="image-20231224164009880"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224151645591.png" alt="image-20231224151645591"></p><p>卸载完成,此处右上角×,没必要付费</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224152141932.png" alt="image-20231224152141932"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224152222866.png" alt="image-20231224152222866"></p><h3 id="确认是否删除干净"><a href="#确认是否删除干净" class="headerlink" title="确认是否删除干净"></a>确认是否删除干净</h3><p>打开控制面板 —&gt; 卸载程序 —&gt; 卸载MySQL相关所有组件</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20220209203345746.png" alt="image-20220209203345746"></p><p>卸载之后,以MySQL开头的软件都没了</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224152256322.png" alt="image-20231224152256322"></p><p>win+R 打开运行，输入 services.msc 点击 “确定” 调出系统服务。此处的mysql开头的系统服务也没了</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20220209203115052.png" alt="image-20220209203115052"> </p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224152451637.png" alt="image-20231224152451637"></p><h2 id="安装新版MySQL"><a href="#安装新版MySQL" class="headerlink" title="安装新版MySQL"></a>安装新版MySQL</h2><p>双击MySQL安装包</p><p>此处选择no</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224153108699.png" alt="image-20231224153108699"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224154645489.png" alt="image-20231224154645489"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224154718002.png" alt="image-20231224154718002"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224154734852.png" alt="image-20231224154734852"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224154752368.png" alt="image-20231224154752368"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155512436.png" alt="image-20231224155512436"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155628499.png" alt="image-20231224155628499"></p><p>此处配置mysql的端口号</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155557567.png" alt="image-20231224155557567"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155654793.png" alt="image-20231224155654793"></p><p>此处设置root的密码,推荐和学校机房一致123456</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155751889.png" alt="image-20231224155751889"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155855346.png" alt="image-20231224155855346"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224155929942.png" alt="image-20231224155929942"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224160029479.png" alt="image-20231224160029479"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224160002199.png" alt="image-20231224160002199"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224160444499.png" alt="image-20231224160444499"></p><p>接下来我们查看一下是否安装成功,点击左下角的开始按钮,找到MySQL</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224160822794.png" alt="image-20231224160822794"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224160926919.png" alt="image-20231224160926919"></p><h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>显示Server version为8.0.26那就意味着MySQL的本体安装成功,开始配置环境变量,让其他软件能够找到它</p><p>我的电脑右键</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224161003109.png" alt="image-20231224161003109"></p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224164546087.png" alt="image-20231224164546087"></p><p>选择新建,填入C:\Program Files\MySQL\MySQL Server 8.0\bin</p><p>选中刚添加的,然后不断选择右边的上移,把这条上移至最高处,这样就不会被其他因素影响</p><p>如果你发现有一条C:\Program Files\MySQL\MySQL Server 56\bin的记录,记得把这条记录删除,这是刚刚卸载的MySQL5.6版本的环境变量.</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224164713961.png" alt="image-20231224164713961"></p><p>win+r打开cmd命令窗口,输入mysql -u root -p</p><p>接下来输入刚刚设置的密码123456</p><p><img src="/MySQL5-6-40%E5%8D%87%E7%BA%A78-0-26.assets/image-20231224161638482.png" alt="image-20231224161638482"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;MySQL5-6-40升级8-0-26&quot;&gt;&lt;a href=&quot;#MySQL5-6-40升级8-0-26&quot; class=&quot;headerlink&quot; title=&quot;MySQL5.6.40升级8.0.26&quot;&gt;&lt;/a&gt;MySQL5.6.40升级8.0.26&lt;/h1&gt;&lt;h2 i</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>post</title>
